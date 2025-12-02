@@ -1,1 +1,1415 @@
-# reopd
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS - Green Practices Scoring | BPCE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E8EAF6 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #6B2C91 0%, #8B4BA8 100%);
+            padding: 20px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #7CB342 0%, #66BB6A 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .logo-text h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        .progress-indicator span {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar-mini {
+            width: 100px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill-mini {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 {
+            color: #6B2C91;
+            font-size: 42px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: #7F8C8D;
+            font-size: 18px;
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .category-card:hover {
+            border-color: #6B2C91;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(107,44,145,0.2);
+        }
+
+        .category-card.completed {
+            border-color: #7CB342;
+        }
+
+        .category-card.completed::after {
+            content: "✓";
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #7CB342;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B2C91 0%, #8B4BA8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .category-card.identity .category-icon {
+            background: linear-gradient(135deg, #0078D4 0%, #00A4EF 100%);
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #6B2C91;
+            margin-bottom: 8px;
+        }
+
+        .category-description {
+            font-size: 14px;
+            color: #7F8C8D;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .category-card.identity .category-description {
+            font-size: 13px;
+        }
+
+        .progress-bar-container {
+            margin-top: 16px;
+        }
+
+        .progress-bar {
+            background: #E0E0E0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #7CB342 0%, #66BB6A 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .question-count {
+            font-size: 12px;
+            color: #7F8C8D;
+            font-weight: 500;
+        }
+
+        /* Question Page */
+        .question-container {
+            display: none;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 24px;
+        }
+
+        .question-panel,
+        .info-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        /* Centrer le panneau quand c'est l'identité (sans panneau d'infos) */
+        .question-container .question-panel {
+            max-width: 100%;
+        }
+
+        .back-button {
+            color: #0078D4;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        .question-number {
+            color: #6B2C91;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .response-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .response-option {
+            padding: 16px 18px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: #323130;
+        }
+
+        .response-option:hover {
+            border-color: #6B2C91;
+            background: #F8F4FB;
+        }
+
+        .response-option.selected {
+            border-color: #6B2C91;
+            background: #F8F4FB;
+            box-shadow: 0 2px 8px rgba(107,44,145,0.15);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #C0C0C0;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .response-option.selected .radio-circle {
+            border-color: #6B2C91;
+        }
+
+        .response-option.selected .radio-circle::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #6B2C91;
+            border-radius: 50%;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 24px;
+            border-top: 2px solid #F0F0F0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #F0F0F0;
+            color: #323130;
+        }
+
+        .btn-secondary:hover {
+            background: #E0E0E0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B2C91 0%, #8B4BA8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(107,44,145,0.3);
+        }
+
+        /* Info Panel */
+        .info-title {
+            color: #6B2C91;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #323130;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #605E5C;
+            line-height: 1.6;
+        }
+
+        .info-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .info-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0078D4;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        .info-link:hover {
+            color: #005A9E;
+            text-decoration: underline;
+        }
+
+        /* Results Page */
+        .results-container {
+            display: none;
+        }
+
+        .results-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .score-section {
+            background: linear-gradient(135deg, #6B2C91 0%, #8B4BA8 100%);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .score-section h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .score-section .project-name {
+            font-size: 16px;
+            opacity: 0.95;
+            margin-bottom: 32px;
+        }
+
+        .recommendations-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .recommendations-section h3 {
+            color: #6B2C91;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-item {
+            padding: 14px 18px;
+            background: #FFF8E1;
+            border-left: 4px solid #FFA726;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+
+        /* Barème de couleurs A-G */
+        .score-circle.grade-a { background: #66BB6A; } /* Vert foncé */
+        .score-circle.grade-b { background: #9CCC65; } /* Vert clair */
+        .score-circle.grade-c { background: #D4E157; } /* Jaune-vert */
+        .score-circle.grade-d { background: #FFEB3B; } /* Jaune */
+        .score-circle.grade-e { background: #FFA726; } /* Orange */
+        .score-circle.grade-f { background: #FF7043; } /* Orange foncé */
+        .score-circle.grade-g { background: #F44336; } /* Rouge */
+
+        .score-letter {
+            font-size: 72px;
+            font-weight: bold;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: white;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .score-text {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .score-message {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .results-section-title {
+            color: #6B2C91;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .result-card h4 {
+            font-size: 16px;
+            color: #6B2C91;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2C3E50;
+            margin-bottom: 12px;
+        }
+
+        .result-score small {
+            font-size: 18px;
+            color: #7F8C8D;
+        }
+
+        .result-bar {
+            background: #E0E0E0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .result-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        .grade-a-bar { background: linear-gradient(90deg, #66BB6A 0%, #7CB342 100%); }
+        .grade-b-bar { background: linear-gradient(90deg, #9CCC65 0%, #AED581 100%); }
+        .grade-c-bar { background: linear-gradient(90deg, #D4E157 0%, #DCE775 100%); }
+        .grade-d-bar { background: linear-gradient(90deg, #FFEB3B 0%, #FFF176 100%); }
+        .grade-e-bar { background: linear-gradient(90deg, #FFA726 0%, #FFB74D 100%); }
+        .grade-f-bar { background: linear-gradient(90deg, #FF7043 0%, #FF8A65 100%); }
+        .grade-g-bar { background: linear-gradient(90deg, #F44336 0%, #E57373 100%); }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-circle">🌱</div>
+                <div class="logo-text">
+                    <h1>GPS - Green Practices Scoring</h1>
+                    <p>BPCE Numérique Responsable</p>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <span id="progressText">0 / 8 catégories</span>
+                <div class="progress-bar-mini">
+                    <div class="progress-fill-mini" id="progressFillMini" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Dashboard -->
+    <div class="container" id="dashboardPage">
+        <div class="page-title">
+            <h2>Tableau de bord GPS</h2>
+            <p>Complétez toutes les sections pour obtenir votre score</p>
+        </div>
+
+        <div class="categories-grid">
+            <!-- Carte 1: Identité du Projet -->
+            <div class="category-card identity" id="identityCard" data-category="identite">
+                <div class="category-icon">📋</div>
+                <div class="category-title">Identité du Projet</div>
+                <div class="category-description">Informations générales sur votre projet</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">5 informations à renseigner</div>
+                </div>
+            </div>
+
+            <!-- Cartes 2-8: Catégories d'évaluation -->
+            <div class="category-card" data-category="accessibilite">
+                <div class="category-icon">♿</div>
+                <div class="category-title">Accessibilité</div>
+                <div class="category-description">Conformité RGAA et accessibilité numérique</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">5 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="comportement">
+                <div class="category-icon">👥</div>
+                <div class="category-title">Comportement & Maturité</div>
+                <div class="category-description">Engagement de l'équipe et sensibilisation</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">10 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="developpement">
+                <div class="category-icon">💻</div>
+                <div class="category-title">Développement interne</div>
+                <div class="category-description">Écoconception et bonnes pratiques de développement</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">6 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="logiciels">
+                <div class="category-icon">📦</div>
+                <div class="category-title">Logiciels</div>
+                <div class="category-description">Logiciels et services externes utilisés</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">5 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="datacenters">
+                <div class="category-icon">🏢</div>
+                <div class="category-title">Data Centers</div>
+                <div class="category-description">Hébergement et infrastructure cloud</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">4 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="workplace">
+                <div class="category-icon">🖥️</div>
+                <div class="category-title">Équipements Workplace</div>
+                <div class="category-description">Postes de travail et équipements utilisateurs</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">3 questions</div>
+                </div>
+            </div>
+
+            <div class="category-card" data-category="infrastructure">
+                <div class="category-icon">🔌</div>
+                <div class="category-title">Équipements Infrastructure</div>
+                <div class="category-description">Serveurs, réseaux et équipements IT</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="question-count">3 questions</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary btn-icon" id="viewResultsBtn" style="display: none;">
+                📊 Voir les résultats
+            </button>
+        </div>
+    </div>
+
+    <!-- Page Questions -->
+    <div class="container question-container" id="questionPage">
+        <div class="question-panel">
+            <div class="back-button" id="backButton">← Retour au tableau de bord</div>
+            <div class="question-number" id="questionNumber">Question 1 sur 5</div>
+            <div class="question-text" id="questionText">Quel est le pourcentage de l'équipe projet IT interne formé à l'écoconception ?</div>
+            
+            <div class="response-options" id="responseOptions">
+                <!-- Options générées dynamiquement -->
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" id="prevButton">← Précédent</button>
+                <button class="btn btn-primary" id="nextButton">Suivant →</button>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-title">ℹ️ Informations & Ressources</div>
+            
+            <div class="info-section">
+                <div class="info-label">Contexte :</div>
+                <div class="info-text" id="infoContext">
+                    La formation de l'équipe est déterminante pour la prise en compte de l'écoconception dans l'élaboration du projet.
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-label">Point d'attention :</div>
+                <div class="info-text" id="infoAttention">
+                    ⚠️ La sensibilisation au Numérique Responsable (ex: Fresque du Numérique) n'est pas considérée comme une formation à l'écoconception.
+                </div>
+            </div>
+
+            <div class="info-links">
+                <a href="#" class="info-link">📚 Campus BPCE - Formations</a>
+                <a href="#" class="info-link">🔗 Référentiel RGESN</a>
+                <a href="#" class="info-link">📖 Guide RGAA 4.1</a>
+                <a href="#" class="info-link">🌐 Ressources BPCE-IT</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Résultats -->
+    <div class="container results-container" id="resultsPage">
+        <div class="results-hero">
+            <!-- Colonne Gauche: Score -->
+            <div class="score-section">
+                <h2>🎉 Résultats de votre évaluation GPS</h2>
+                <p class="project-name" id="projectNameResult">Projet: Plateforme Client Digital</p>
+                
+                <div class="score-circle grade-b" id="scoreCircle">
+                    <div class="score-letter" id="scoreLetter">B</div>
+                    <div class="score-label">Votre note</div>
+                </div>
+                
+                <div class="score-text" id="scoreText">Score global : 78/100</div>
+                <div class="score-message" id="scoreMessage">🌱 Vous êtes sur la bonne voie !</div>
+            </div>
+
+            <!-- Colonne Droite: Recommandations -->
+            <div class="recommendations-section">
+                <h3>🎯 Recommandations prioritaires</h3>
+                <div id="recommendationsList">
+                    <div class="recommendation-item">Former davantage l'équipe à l'écoconception</div>
+                    <div class="recommendation-item">Mettre en place une politique de déplacement responsable</div>
+                    <div class="recommendation-item">Optimiser l'utilisation des ressources serveur</div>
+                    <div class="recommendation-item">Privilégier du matériel reconditionné</div>
+                    <div class="recommendation-item">Améliorer la documentation d'accessibilité</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="results-section-title">📊 Détail par catégorie</h3>
+        <div class="results-grid" id="resultsGrid">
+            <!-- Résultats générés dynamiquement -->
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary btn-icon" id="modifyBtn">← Modifier les réponses</button>
+            <button class="btn btn-primary btn-icon" id="generatePdfBtn">📄 Générer le rapport PDF</button>
+            <button class="btn btn-primary btn-icon" id="sendEmailBtn">📧 Envoyer par email</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des catégories et questions
+        const categories = {
+            identite: {
+                name: "Identité du Projet",
+                icon: "📋",
+                isIdentity: true, // Flag spécial pour ne pas afficher le panneau d'infos
+                questions: [
+                    {
+                        text: "Quel est le nom de votre projet ?",
+                        isInput: true,
+                        inputType: "text",
+                        placeholder: "Ex: Plateforme Client Digital"
+                    },
+                    {
+                        text: "À quelle entité appartient le projet ?",
+                        isSelect: true,
+                        options: [
+                            { text: "Global Financial Services", score: 0 },
+                            { text: "BPCE-IT", score: 0 },
+                            { text: "Natixis", score: 0 },
+                            { text: "Autre", score: 0 }
+                        ]
+                    },
+                    {
+                        text: "Qui est le Product Owner du projet ?",
+                        isInput: true,
+                        inputType: "text",
+                        placeholder: "Prénom NOM"
+                    },
+                    {
+                        text: "Quelle est l'adresse email de contact ?",
+                        isInput: true,
+                        inputType: "email",
+                        placeholder: "prenom.nom@bpce.fr"
+                    },
+                    {
+                        text: "Êtes-vous accompagné(e) dans votre démarche GPS ?",
+                        isSelect: true,
+                        options: [
+                            { text: "Non, démarche en autonomie", score: 0 },
+                            { text: "Oui, accompagné(e) par un coach NR", score: 0 }
+                        ]
+                    }
+                ]
+            },
+            accessibilite: {
+                name: "Accessibilité",
+                icon: "♿",
+                questions: [
+                    {
+                        text: "Quel est le pourcentage de l'équipe projet IT interne formé à l'écoconception ?",
+                        options: [
+                            { text: "0% - Aucune formation", score: 0 },
+                            { text: "< 25% de l'équipe", score: 25 },
+                            { text: "25% à 50% de l'équipe", score: 50 },
+                            { text: "50% à 75% de l'équipe", score: 75 },
+                            { text: "> 75% de l'équipe", score: 100 }
+                        ],
+                        context: "La formation de l'équipe est déterminante pour la prise en compte de l'écoconception dans l'élaboration du projet.",
+                        attention: "⚠️ La sensibilisation au Numérique Responsable (ex: Fresque du Numérique) n'est pas considérée comme une formation à l'écoconception."
+                    },
+                    {
+                        text: "Imposez-vous un niveau d'accessibilité RGAA pour votre projet ?",
+                        options: [
+                            { text: "Non, aucun niveau imposé", score: 0 },
+                            { text: "Niveau simple (A)", score: 33 },
+                            { text: "Niveau double A (AA)", score: 67 },
+                            { text: "Niveau triple A (AAA)", score: 100 }
+                        ],
+                        context: "BPCE est soumis à des obligations légales en matière d'accessibilité numérique.",
+                        attention: "Le niveau AA est le niveau minimum requis par la loi pour les services publics."
+                    },
+                    {
+                        text: "Effectuez-vous des tests d'accessibilité réguliers ?",
+                        options: [
+                            { text: "Jamais", score: 0 },
+                            { text: "À la fin du projet uniquement", score: 33 },
+                            { text: "À chaque livraison majeure", score: 67 },
+                            { text: "Intégré dans le process de dev (CI/CD)", score: 100 }
+                        ],
+                        context: "Les tests réguliers permettent de détecter et corriger les problèmes d'accessibilité au plus tôt.",
+                        attention: "Plus les tests sont tardifs, plus les corrections sont coûteuses."
+                    },
+                    {
+                        text: "Avez-vous une documentation sur l'accessibilité de votre projet ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Partiellement", score: 50 },
+                            { text: "Oui, complète et à jour", score: 100 }
+                        ],
+                        context: "La documentation aide les équipes à maintenir le niveau d'accessibilité.",
+                        attention: "Une déclaration d'accessibilité est obligatoire pour les sites web publics."
+                    },
+                    {
+                        text: "Impliquez-vous des utilisateurs en situation de handicap dans vos tests ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Parfois", score: 50 },
+                            { text: "Oui, systématiquement", score: 100 }
+                        ],
+                        context: "Les tests utilisateurs réels révèlent des problèmes que les outils automatiques ne détectent pas.",
+                        attention: "Rien ne remplace l'expérience d'un utilisateur réel."
+                    }
+                ]
+            },
+            comportement: {
+                name: "Comportement & Maturité",
+                icon: "👥",
+                questions: [
+                    {
+                        text: "L'équipe a-t-elle été sensibilisée au numérique responsable ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Sensibilisation ponctuelle", score: 50 },
+                            { text: "Oui, formation complète", score: 100 }
+                        ],
+                        context: "La sensibilisation est la première étape vers une démarche responsable.",
+                        attention: "La Fresque du Numérique est un bon point de départ."
+                    },
+                    {
+                        text: "Existe-t-il un référent numérique responsable dans l'équipe ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Oui, mais non formalisé", score: 50 },
+                            { text: "Oui, rôle formalisé et reconnu", score: 100 }
+                        ],
+                        context: "Un référent permet de porter la démarche au quotidien.",
+                        attention: "Le référent doit avoir du temps dédié pour cette mission."
+                    }
+                ]
+            },
+            developpement: {
+                name: "Développement interne",
+                icon: "💻",
+                questions: [
+                    {
+                        text: "Appliquez-vous les principes d'écoconception dans le développement ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Partiellement", score: 50 },
+                            { text: "Oui, systématiquement", score: 100 }
+                        ],
+                        context: "L'écoconception logicielle réduit l'impact environnemental dès la conception.",
+                        attention: "Référez-vous au RGESN pour les bonnes pratiques."
+                    }
+                ]
+            },
+            logiciels: {
+                name: "Logiciels",
+                icon: "📦",
+                questions: [
+                    {
+                        text: "Privilégiez-vous des logiciels éco-responsables ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Quand c'est possible", score: 50 },
+                            { text: "Oui, critère de sélection", score: 100 }
+                        ],
+                        context: "Le choix des logiciels a un impact sur la consommation énergétique.",
+                        attention: "Consultez des labels comme Blue Angel ou TCO."
+                    }
+                ]
+            },
+            datacenters: {
+                name: "Data Centers",
+                icon: "🏢",
+                questions: [
+                    {
+                        text: "Vos serveurs sont-ils hébergés dans des datacenters certifiés ?",
+                        options: [
+                            { text: "Je ne sais pas", score: 0 },
+                            { text: "Non", score: 25 },
+                            { text: "Partiellement", score: 50 },
+                            { text: "Oui, 100% certifiés", score: 100 }
+                        ],
+                        context: "Les certifications ISO 50001, ISO 14001 garantissent une meilleure efficacité énergétique.",
+                        attention: "Privilégiez les datacenters avec PUE < 1.5."
+                    }
+                ]
+            },
+            workplace: {
+                name: "Équipements Workplace",
+                icon: "🖥️",
+                questions: [
+                    {
+                        text: "Privilégiez-vous du matériel reconditionné ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Parfois", score: 50 },
+                            { text: "Oui, prioritairement", score: 100 }
+                        ],
+                        context: "Le reconditionné réduit l'impact environnemental de 50 à 80%.",
+                        attention: "Le matériel reconditionné a souvent une garantie équivalente au neuf."
+                    }
+                ]
+            },
+            infrastructure: {
+                name: "Équipements Infrastructure",
+                icon: "🔌",
+                questions: [
+                    {
+                        text: "Optimisez-vous l'utilisation de vos serveurs ?",
+                        options: [
+                            { text: "Non", score: 0 },
+                            { text: "Partiellement", score: 50 },
+                            { text: "Oui, avec monitoring", score: 100 }
+                        ],
+                        context: "Un serveur sous-utilisé consomme presque autant qu'un serveur pleinement utilisé.",
+                        attention: "Visez un taux d'utilisation > 70%."
+                    }
+                ]
+            }
+        };
+
+        // État de l'application
+        let currentCategory = null;
+        let currentQuestionIndex = 0;
+        let responses = {};
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Clic sur une catégorie
+            document.querySelectorAll('.category-card[data-category]').forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    startCategory(category);
+                });
+            });
+
+            // Navigation
+            document.getElementById('backButton').addEventListener('click', backToDashboard);
+            document.getElementById('prevButton').addEventListener('click', previousQuestion);
+            document.getElementById('nextButton').addEventListener('click', nextQuestion);
+            document.getElementById('viewResultsBtn').addEventListener('click', showResults);
+            document.getElementById('modifyBtn').addEventListener('click', backToDashboard);
+            
+            // Actions résultats
+            document.getElementById('generatePdfBtn').addEventListener('click', generatePdf);
+            document.getElementById('sendEmailBtn').addEventListener('click', sendEmail);
+        }
+
+        function startCategory(category) {
+            currentCategory = category;
+            currentQuestionIndex = 0;
+            
+            const categoryConfig = categories[category];
+            const questionPage = document.getElementById('questionPage');
+            const infoPanel = document.querySelector('.info-panel');
+            
+            // Si c'est l'identité, masquer le panneau d'infos et centrer le contenu
+            if (categoryConfig.isIdentity) {
+                questionPage.style.gridTemplateColumns = '1fr';
+                infoPanel.style.display = 'none';
+            } else {
+                questionPage.style.gridTemplateColumns = '1.8fr 1fr';
+                infoPanel.style.display = 'block';
+            }
+            
+            showQuestion();
+            
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('questionPage').style.display = 'grid';
+        }
+
+        function showQuestion() {
+            const category = categories[currentCategory];
+            const question = category.questions[currentQuestionIndex];
+            
+            document.getElementById('questionNumber').textContent = 
+                `Question ${currentQuestionIndex + 1} sur ${category.questions.length}`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            // Mettre à jour le panneau d'infos seulement si ce n'est pas l'identité
+            if (!category.isIdentity && question.context) {
+                document.getElementById('infoContext').textContent = question.context;
+                document.getElementById('infoAttention').textContent = question.attention;
+            }
+            
+            // Afficher les options
+            const optionsContainer = document.getElementById('responseOptions');
+            optionsContainer.innerHTML = '';
+            
+            // Gérer les champs input (pour identité)
+            if (question.isInput) {
+                const inputDiv = document.createElement('div');
+                inputDiv.style.padding = '20px';
+                inputDiv.style.background = '#F8F9FA';
+                inputDiv.style.borderRadius = '8px';
+                inputDiv.style.borderLeft = '4px solid #0078D4';
+                
+                const input = document.createElement('input');
+                input.type = question.inputType || 'text';
+                input.placeholder = question.placeholder || '';
+                input.style.width = '100%';
+                input.style.padding = '14px 16px';
+                input.style.fontSize = '16px';
+                input.style.border = '2px solid #E0E0E0';
+                input.style.borderRadius = '6px';
+                input.style.fontFamily = 'inherit';
+                
+                // Récupérer la valeur existante si déjà remplie
+                const responseKey = `${currentCategory}-${currentQuestionIndex}`;
+                if (responses[responseKey] !== undefined) {
+                    input.value = responses[responseKey];
+                }
+                
+                input.addEventListener('input', function() {
+                    responses[responseKey] = this.value;
+                });
+                
+                inputDiv.appendChild(input);
+                optionsContainer.appendChild(inputDiv);
+            }
+            // Gérer les select (pour identité)
+            else if (question.isSelect) {
+                const selectDiv = document.createElement('div');
+                selectDiv.style.padding = '20px';
+                selectDiv.style.background = '#F8F9FA';
+                selectDiv.style.borderRadius = '8px';
+                selectDiv.style.borderLeft = '4px solid #0078D4';
+                
+                const select = document.createElement('select');
+                select.style.width = '100%';
+                select.style.padding = '14px 16px';
+                select.style.fontSize = '16px';
+                select.style.border = '2px solid #E0E0E0';
+                select.style.borderRadius = '6px';
+                select.style.fontFamily = 'inherit';
+                
+                // Option par défaut
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Sélectionnez --';
+                select.appendChild(defaultOption);
+                
+                // Options
+                question.options.forEach((option, index) => {
+                    const opt = document.createElement('option');
+                    opt.value = index;
+                    opt.textContent = option.text;
+                    select.appendChild(opt);
+                });
+                
+                // Récupérer la valeur existante
+                const responseKey = `${currentCategory}-${currentQuestionIndex}`;
+                if (responses[responseKey] !== undefined) {
+                    select.value = responses[responseKey];
+                }
+                
+                select.addEventListener('change', function() {
+                    responses[responseKey] = this.value;
+                });
+                
+                selectDiv.appendChild(select);
+                optionsContainer.appendChild(selectDiv);
+            }
+            // Questions normales avec options radio
+            else {
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'response-option';
+                    optionDiv.innerHTML = `
+                        <div class="radio-circle"></div>
+                        <div>${option.text}</div>
+                    `;
+                    
+                    // Sélectionner si déjà répondu
+                    const responseKey = `${currentCategory}-${currentQuestionIndex}`;
+                    if (responses[responseKey] === index) {
+                        optionDiv.classList.add('selected');
+                    }
+                    
+                    optionDiv.addEventListener('click', function() {
+                        document.querySelectorAll('.response-option').forEach(o => o.classList.remove('selected'));
+                        this.classList.add('selected');
+                        responses[responseKey] = index;
+                    });
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            }
+            
+            // Gestion des boutons
+            document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            const category = categories[currentCategory];
+            const question = category.questions[currentQuestionIndex];
+            const responseKey = `${currentCategory}-${currentQuestionIndex}`;
+            
+            // Validation différente selon le type de question
+            if (question.isInput) {
+                const inputValue = responses[responseKey];
+                if (!inputValue || inputValue.trim() === '') {
+                    alert('⚠️ Veuillez remplir ce champ avant de continuer');
+                    return;
+                }
+                // Validation email
+                if (question.inputType === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        alert('⚠️ Veuillez entrer une adresse email valide');
+                        return;
+                    }
+                }
+            } else if (question.isSelect) {
+                if (responses[responseKey] === undefined || responses[responseKey] === '') {
+                    alert('⚠️ Veuillez sélectionner une option avant de continuer');
+                    return;
+                }
+            } else {
+                // Questions normales avec radio buttons
+                if (responses[responseKey] === undefined) {
+                    alert('⚠️ Veuillez sélectionner une réponse avant de continuer');
+                    return;
+                }
+            }
+            
+            if (currentQuestionIndex < category.questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                // Catégorie terminée
+                markCategoryComplete(currentCategory);
+                backToDashboard();
+            }
+        }
+
+        function markCategoryComplete(category) {
+            const card = document.querySelector(`[data-category="${category}"]`);
+            card.classList.add('completed');
+            card.querySelector('.progress-fill').style.width = '100%';
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalCategories = 8;
+            let completed = 0;
+            
+            document.querySelectorAll('.category-card[data-category]').forEach(card => {
+                if (card.classList.contains('completed')) {
+                    completed++;
+                }
+            });
+            
+            const percentage = (completed / totalCategories) * 100;
+            document.getElementById('progressText').textContent = `${completed} / ${totalCategories} catégories`;
+            document.getElementById('progressFillMini').style.width = `${percentage}%`;
+            
+            if (completed === totalCategories) {
+                document.getElementById('viewResultsBtn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('viewResultsBtn').style.display = 'none';
+            }
+        }
+
+        function backToDashboard() {
+            document.getElementById('dashboardPage').style.display = 'block';
+            document.getElementById('questionPage').style.display = 'none';
+            document.getElementById('resultsPage').style.display = 'none';
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            let totalQuestions = 0;
+            const categoryScores = {};
+            
+            for (const [categoryKey, category] of Object.entries(categories)) {
+                let categoryTotal = 0;
+                let categoryCount = 0;
+                
+                category.questions.forEach((question, qIndex) => {
+                    const responseKey = `${categoryKey}-${qIndex}`;
+                    if (responses[responseKey] !== undefined) {
+                        const selectedOption = question.options[responses[responseKey]];
+                        categoryTotal += selectedOption.score;
+                        categoryCount++;
+                    }
+                });
+                
+                if (categoryCount > 0) {
+                    categoryScores[categoryKey] = {
+                        score: Math.round(categoryTotal / categoryCount),
+                        name: category.name,
+                        icon: category.icon
+                    };
+                    totalScore += categoryTotal;
+                    totalQuestions += categoryCount;
+                }
+            }
+            
+            const globalScore = totalQuestions > 0 ? Math.round(totalScore / totalQuestions) : 0;
+            return { globalScore, categoryScores };
+        }
+
+        function getGrade(score) {
+            if (score >= 90) return 'A';
+            if (score >= 75) return 'B';
+            if (score >= 60) return 'C';
+            if (score >= 45) return 'D';
+            if (score >= 30) return 'E';
+            if (score >= 15) return 'F';
+            return 'G';
+        }
+
+        function getGradeColor(grade) {
+            const colors = {
+                'A': 'grade-a',
+                'B': 'grade-b',
+                'C': 'grade-c',
+                'D': 'grade-d',
+                'E': 'grade-e',
+                'F': 'grade-f',
+                'G': 'grade-g'
+            };
+            return colors[grade] || 'grade-g';
+        }
+
+        function getMessage(score) {
+            if (score >= 90) return '🏆 Excellent ! Vous êtes exemplaire !';
+            if (score >= 75) return '🌱 Très bien ! Vous êtes sur la bonne voie !';
+            if (score >= 60) return '👍 Bien ! Des progrès sont possibles.';
+            if (score >= 45) return '⚠️ Insuffisant. Des efforts sont nécessaires.';
+            return '❌ Très insuffisant. Une action urgente est requise.';
+        }
+
+        function showResults() {
+            const { globalScore, categoryScores } = calculateScore();
+            const grade = getGrade(globalScore);
+            const gradeColor = getGradeColor(grade);
+            
+            // Récupérer le nom du projet depuis les réponses (première question de l'identité)
+            const projectName = responses['identite-0'] || 'Votre projet';
+            
+            // Mise à jour du cercle de score avec la couleur
+            const scoreCircle = document.getElementById('scoreCircle');
+            scoreCircle.className = `score-circle ${gradeColor}`;
+            
+            document.getElementById('scoreLetter').textContent = grade;
+            document.getElementById('scoreText').textContent = `Score global : ${globalScore}/100`;
+            document.getElementById('scoreMessage').textContent = getMessage(globalScore);
+            document.getElementById('projectNameResult').textContent = `Projet: ${projectName}`;
+            
+            // Afficher les résultats par catégorie (exclure identité)
+            const resultsGrid = document.getElementById('resultsGrid');
+            resultsGrid.innerHTML = '';
+            
+            for (const [categoryKey, data] of Object.entries(categoryScores)) {
+                if (categoryKey === 'identite') continue; // Ne pas afficher l'identité dans les résultats
+                
+                const categoryGrade = getGrade(data.score);
+                const categoryGradeColor = getGradeColor(categoryGrade);
+                
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <h4>${data.icon} ${data.name}</h4>
+                    <div class="result-score">${data.score}<small>/100</small></div>
+                    <div class="result-bar">
+                        <div class="result-bar-fill ${categoryGradeColor}-bar" style="width: ${data.score}%"></div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            }
+            
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('resultsPage').style.display = 'block';
+        }
+
+        function generatePdf() {
+            alert('📄 Génération du rapport PDF en cours...\n\nVotre rapport sera téléchargé dans quelques secondes.');
+            setTimeout(() => {
+                alert('✅ Rapport PDF généré avec succès !');
+            }, 2000);
+        }
+
+        function sendEmail() {
+            // Récupérer l'email depuis les réponses (quatrième question de l'identité)
+            const email = responses['identite-3'] || 'votre email';
+            alert(`📧 Envoi du récapitulatif par email à ${email}...\n\nVous recevrez un email dans quelques instants.`);
+            setTimeout(() => {
+                alert('✅ Email envoyé avec succès !');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
